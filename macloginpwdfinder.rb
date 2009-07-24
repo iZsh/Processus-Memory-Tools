@@ -45,7 +45,7 @@ include Ragweed
 include Wraposx
 
 def search_password(buffer, addr = 0)
-  password = buffer[/password\000([^\000]+)\000shell/, 1]
+  password = buffer[/password[\000]+([^\000]+)[\000]+shell/, 1]
   puts "Found Login password: #{password}" if password
 end
 
@@ -74,7 +74,10 @@ def search_region(dbg, addr, debug = false)
 end
 
 if ARGV.size != 1 then
-  p "Usage: sudo ruby #{$0} <pid>"
+  puts "Mac OS X loginwindow.app password finder"
+  puts "Copyright (c) 2009 iZsh - izsh at iphone-dev.com"
+  puts "================================================"
+  puts "Usage: sudo ruby #{$0} <pid>"
   exit(1)
 end
   

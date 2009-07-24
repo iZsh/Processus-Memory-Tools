@@ -28,7 +28,7 @@
 # wherein <pid> is the pid of the process you want to analyze
 # and regexp is a regular expression
 #
-# Example: % sudo ruby pms.rb <pid> "password\000([^\000]+)\000shell"
+# Example: % sudo ruby pms.rb <pid> "password[\000]+([^\000]+)[\000]+shell"
 #
 
 require 'rubygems'
@@ -85,7 +85,10 @@ def search_region(dbg, regexp, addr, debug = false)
 end
 
 if ARGV.size != 2 then
-  p "Usage: sudo ruby #{$0} <pid> <regexp>"
+  puts "Mac OS X processus memory search tool"
+  puts "Copyright (c) 2009 iZsh - izsh at iphone-dev.com"
+  puts "================================================"
+  puts "Usage: sudo ruby #{$0} <pid> <regexp>"
   exit(1)
 end
   

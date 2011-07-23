@@ -1,5 +1,5 @@
 # Mac OS X processus memory search tool
-# Copyright (c) 2009 iZsh - izsh at iphone-dev.com
+# Copyright (c) 2009 iZsh - izsh at fail0verflow.com
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -63,30 +63,30 @@ end
 def search_region(dbg, regexp, addr, debug = false)
   while true do
     print "Looking for the next region starting from addr 0x%08x\n" % addr if debug
-    basic_region_info = RegionBasicInfo.get(dbg.task, addr) rescue break
+    basic_region_info = dbg.region_info(addr) rescue break
     printf basic_region_info.dump if debug
-    extended_region_info = RegionExtendedInfo.get(dbg.task, addr) rescue break
+    extended_region_info = dbg.region_info(addr, :extended) rescue break
     printf extended_region_info.dump if debug
     if ((basic_region_info.protection & Vm::Pflags::READ) != 0 &&
       (basic_region_info.max_protection & Vm::Pflags::READ) != 0 &&
-      extended_region_info.share_mode != Vm::Sm::SM_EMPTY)
+      extended_region_info.share_mode != Vm::Sm::EMPTY)
     then
       begin
-        buffer = Wraposx::vm_read(dbg.task, basic_region_info.address, basic_region_info.size)
+        buffer = Wraposx::vm_read(dbg.task, basic_region_info.base_address, basic_region_info.region_size)
       rescue
         buffer = ""
-        puts "WARNING: something went wrong while reading @0x%x" % basic_region_info.address
+        puts "WARNING: something went wrong while reading @0x%x" % basic_region_info.base_address
       end
-      search_regexp(buffer, regexp, basic_region_info.address)
+      search_regexp(buffer, regexp, basic_region_info.base_address)
     end
-    addr = basic_region_info.address + basic_region_info.size
+    addr = basic_region_info.base_address + basic_region_info.region_size
   end
   puts "done!"  
 end
 
 if ARGV.size != 2 then
   puts "Mac OS X processus memory search tool"
-  puts "Copyright (c) 2009 iZsh - izsh at iphone-dev.com"
+  puts "Copyright (c) 2009 iZsh - izsh at fail0verflow.com"
   puts "================================================"
   puts "Usage: sudo ruby #{$0} <pid> <regexp>"
   exit(1)
